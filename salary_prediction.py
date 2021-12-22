@@ -12,7 +12,7 @@ nav = st.sidebar.radio("Navigation", ['Home', 'Prediction', 'Contribute'])
 data = pd.read_csv('Salaries.csv')
 x = np.array(data['yrs.service']).reshape(-1, 1)
 lr = LinearRegression()
-#lr.fit(x, np.array(data['salary']))
+lr.fit(x, np.array(data['salary']))
 
 if nav == 'Home':
     st.image('Minimum-wage-and-salary.jpg')
