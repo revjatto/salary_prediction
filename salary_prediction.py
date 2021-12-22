@@ -14,26 +14,29 @@ if nav == 'Home':
     if st.checkbox('Show Salary Table'):
         st.table(data)
         
-graph = st.selectbox('What type of graph?', ['Non-Interactive', 'Interactive'])
+    graph = st.selectbox('What type of graph?', ['Non-Interactive', 'Interactive'])
 
-val = st.slider('Filter data using Years of service', 0,60)
-if graph == 'Non-Interactive':
-    fig = plt.figure(figsize=(10,5))
-    plt.scatter(data['yrs.service'],data['salary'])
-    plt.ylim(0)
-    plt.xlabel('Years of Service')
-    plt.ylabel('Yearly Salary')
-    plt.tight_layout()
-    st.pyplot(fig)
+    val = st.slider('Filter data using Years of service', 0,60)
+    data = data.loc[data['yrs.service'] >= val]
+    if graph == 'Non-Interactive':
+        
+        fig = plt.figure(figsize=(10,5))
+        plt.scatter(data['yrs.service'],data['salary'])
+        plt.ylim(0)
+        plt.xlabel('Years of Service')
+        plt.ylabel('Yearly Salary')
+        plt.tight_layout()
+        st.pyplot(fig)
     
-if graph == "Interactive":
-    layout = go.Layout(
-        xaxis=dict(range=[0, 16]),
-        yaxis=dict(range=[0, 210000])
+    if graph == "Interactive":
+        
+        layout = go.Layout(
+            xaxis=dict(range=[0, 16]),
+            yaxis=dict(range=[0, 210000])
     )
-    fig = go.Figure(data=go.Scatter(
+        fig = go.Figure(data=go.Scatter(
         x=data["yrs.service"], y=data["salary"], mode='markers'), layout=layout)
-    st.plotly_chart(fig)
+        st.plotly_chart(fig)
 
 if nav == 'Prediction':
     st.image('salary_people.jpg')
