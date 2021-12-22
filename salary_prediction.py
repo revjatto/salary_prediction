@@ -3,11 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from plotly import graph_objs as go
 import plotly.express as px
+from sklearn.linear_model import LinearRegression
+import numpy as np
 
-st.title("Salary Prediction application")
+st.title("Experience vs Salary ML Prediction")
 nav = st.sidebar.radio("Navigation", ['Home', 'Prediction', 'Contribute'])
 
 data = pd.read_csv('Salaries.csv')
+x = np.array(data['yrs.service']).reshape(-1, 1)
+lr = LinearRegression()
+#lr.fit(x, np.array(data['salary']))
 
 if nav == 'Home':
     st.image('Minimum-wage-and-salary.jpg')
@@ -40,6 +45,21 @@ if nav == 'Home':
 
 if nav == 'Prediction':
     st.image('salary_people.jpg')
+    st.header("Know your Salary")
+    val = st.number_input("Enter you exp",0.00,20.00,step = 0.25)
+    val = np.array(val).reshape(1,-1)
+    pred =lr.predict(val)[0]
+    if st.button("Predict"):
+        st.success(f"Your predicted salary is £{round(pred)}")
     
 if nav == 'Contribute':
     st.image('Salery.jpg')
+    st.header("Contribute to our dataset")
+    ex = st.number_input("Enter your of Service", 0.0, 20.0)
+    sal = st.number_input("Enter your Salary", 0.00, 1000000.00, step=1000.0)
+    if st.button("submit"):
+        to_add = {"yrs.service": [ex], "salary": [sal]}
+        to_add = pd.DataFrame(to_add)
+        to_add.to_csv("Salaries.csv", mode='a',
+                      header=False, index=False)
+        st.success("Submitted")
